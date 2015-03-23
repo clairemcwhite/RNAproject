@@ -476,7 +476,7 @@ def end_arm_extension(target, s):
     
      
         count = 0
-        print "enterhamming loop"
+        #print "enterhamming loop"
         #print extension_order[testcycles]
         while hamm == 0 and extensionA:
                 #current_gap = gap + max(extension_order[testcycles][0], extension_order[testcycles][1])

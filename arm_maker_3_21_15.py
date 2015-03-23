@@ -1,3 +1,16 @@
+#Step 1:
+#Create list of potential arms which fall into realistic parameters of arms
+##Current parameters:
+##Hairpin minimum length = 4
+##Hairpin maximum length = 16 (taken from 518 loop)
+##Hairpins larger than 9nt long must be bridged with 6bps
+##2bp long bridges can't bound hairpin loops of 5 or more nts
+##
+##
+##Arms of less than 40 bp can't have more than 3 open loops per side
+##Arms can't be composed of more than 40% unpaired nts (excluding hairpin unpaired nts)
+
+
 
 #seq_file =
 #"GGGGCCGTAGCTCAGCTGGGAGAGCACCTGCTTTGCAAGCAGGGGGTCGTCGGTTCGATCCCGTCCGGCTCCACCA"
@@ -15,7 +28,7 @@
 #http://www.ebi.ac.uk/ena/data/view/A14565&display=fasta
 #http://www.arb-silva.de/browser/ssu-121/silva/CP001368
 #currently reliably(?) finding hairpin turn ends
-seq_file = "AAATTGAAGAGTTTGATCATGGCTCAGATTGAACGCTGGCGGCAGGCCTAACACATGCAAGTCGAACGGTAACAGGAAGAAGCTTGCTTCTTTGCTGACGAGTGGCGGACGGGTGAGTAATGTCTGGGAAACTGCCTGATGGAGGGGGATAACTACTGGAAACGGTAGCTAATACCGCATAACGTCGCAAGACCAAAGAGGGGGACCTTCGGGCCTCTTGCCATCGGATGTGCCCAGATGGGATTAGCTAGTAGGTGGGGTAACGGCTCACCTAGGCGACGATCCCTAGCTGGTCTGAGAGGATGACCAGCCACACTGGAACTGAGACACGGTCCAGACTCCTACGGGAGGCAGCAGTGGGGAATATTGCACAATGGGCGCAAGCCTGATGCAGCCATGCCGCGTGTATGAAGAAGGCCTTCGGGTTGTAAAGTACTTTCAGCGGGGAGGAAGGGAGTAAAGTTAATACCTTTGCTCATTGACGTTACCCGCAGAAGAAGCACCGGCTAACTCCGTGCCAGCAGCCGCGGTAATACGGAGGGTGCAAGCGTTAATCGGAATTACTGGGCGTAAAGCGCACGCAGGCGGTTTGTTAAGTCAGATGTGAAATCCCCGGGCTCAACCTGGGAACTGCATCTGATACTGGCAAGCTTGAGTCTCGTAGAGGGGGGTAGAATTCCAGGTGTAGCGGTGAAATGCGTAGAGATCTGGAGGAATACCGGTGGCGAAGGCGGCCCCCTGGACGAAGACTGACGCTCAGGTGCGAAAGCGTGGGGAGCAAACAGGATTAGATACCCTGGTAGTCCACGCCGTAAACGATGTCGACTTGGAGGTTGTGCCCTTGAGGCGTGGCTTCCGGAGCTAACGCGTTAAGTCGACCGCCTGGGGAGTACGGCCGCAAGGTTAAAACTCAAATGAATTGACGGGGGCCCGCACAAGCGGTGGAGCATGTGGTTTAATTCGATGCAACGCGAAGAACCTTACCTGGTCTTGACATCCACGGAAGTTTTCAGAGATGAGAATGTGCCTTCGGGAACCGTGAGACAGGTGCTGCATGGCTGTCGTCAGCTCGTGTTGTGAAATGTTGGGTTAAGTCCCGCAACGAGCGCAACCCTTATCCTTTGTTGCCAGCGGTCCGGCCGGGAACTCAAAGGAGACTGCCAGTGATAAACTGGAGGAAGGTGGGGATGACGTCAAGTCATCATGGCCCTTACGACCAGGGCTACACACGTGCTACAATGGCGCATACAAAGAGAAGCGACCTCGCGAGAGCAAGCGGACCTCATAAAGTGCGTCGTAGTCCGGATTGGAGTCTGCAACTCGACTCCATGAAGTCGGAATCGCTAGTAATCGTGGATCAGAATGCCACGGTGAATACGTTCCCGGGCCTTGTACACACCGCCCGTCACACCATGGGAGTGGGTTGCAAAAGAAGTAGGTAGCTTAACCTTCGGGAGGGCGCTTACCACTTTGTGATTCATGACTGGGGTGAAGTCGTAACAAGGTAACCGTAGGGGAACCTGCGGTTGGATCACCTCCTTA" #
+#seq_file = "AAATTGAAGAGTTTGATCATGGCTCAGATTGAACGCTGGCGGCAGGCCTAACACATGCAAGTCGAACGGTAACAGGAAGAAGCTTGCTTCTTTGCTGACGAGTGGCGGACGGGTGAGTAATGTCTGGGAAACTGCCTGATGGAGGGGGATAACTACTGGAAACGGTAGCTAATACCGCATAACGTCGCAAGACCAAAGAGGGGGACCTTCGGGCCTCTTGCCATCGGATGTGCCCAGATGGGATTAGCTAGTAGGTGGGGTAACGGCTCACCTAGGCGACGATCCCTAGCTGGTCTGAGAGGATGACCAGCCACACTGGAACTGAGACACGGTCCAGACTCCTACGGGAGGCAGCAGTGGGGAATATTGCACAATGGGCGCAAGCCTGATGCAGCCATGCCGCGTGTATGAAGAAGGCCTTCGGGTTGTAAAGTACTTTCAGCGGGGAGGAAGGGAGTAAAGTTAATACCTTTGCTCATTGACGTTACCCGCAGAAGAAGCACCGGCTAACTCCGTGCCAGCAGCCGCGGTAATACGGAGGGTGCAAGCGTTAATCGGAATTACTGGGCGTAAAGCGCACGCAGGCGGTTTGTTAAGTCAGATGTGAAATCCCCGGGCTCAACCTGGGAACTGCATCTGATACTGGCAAGCTTGAGTCTCGTAGAGGGGGGTAGAATTCCAGGTGTAGCGGTGAAATGCGTAGAGATCTGGAGGAATACCGGTGGCGAAGGCGGCCCCCTGGACGAAGACTGACGCTCAGGTGCGAAAGCGTGGGGAGCAAACAGGATTAGATACCCTGGTAGTCCACGCCGTAAACGATGTCGACTTGGAGGTTGTGCCCTTGAGGCGTGGCTTCCGGAGCTAACGCGTTAAGTCGACCGCCTGGGGAGTACGGCCGCAAGGTTAAAACTCAAATGAATTGACGGGGGCCCGCACAAGCGGTGGAGCATGTGGTTTAATTCGATGCAACGCGAAGAACCTTACCTGGTCTTGACATCCACGGAAGTTTTCAGAGATGAGAATGTGCCTTCGGGAACCGTGAGACAGGTGCTGCATGGCTGTCGTCAGCTCGTGTTGTGAAATGTTGGGTTAAGTCCCGCAACGAGCGCAACCCTTATCCTTTGTTGCCAGCGGTCCGGCCGGGAACTCAAAGGAGACTGCCAGTGATAAACTGGAGGAAGGTGGGGATGACGTCAAGTCATCATGGCCCTTACGACCAGGGCTACACACGTGCTACAATGGCGCATACAAAGAGAAGCGACCTCGCGAGAGCAAGCGGACCTCATAAAGTGCGTCGTAGTCCGGATTGGAGTCTGCAACTCGACTCCATGAAGTCGGAATCGCTAGTAATCGTGGATCAGAATGCCACGGTGAATACGTTCCCGGGCCTTGTACACACCGCCCGTCACACCATGGGAGTGGGTTGCAAAAGAAGTAGGTAGCTTAACCTTCGGGAGGGCGCTTACCACTTTGTGATTCATGACTGGGGTGAAGTCGTAACAAGGTAACCGTAGGGGAACCTGCGGTTGGATCACCTCCTTA" #
 #seq_file = "GAAGTCGTAACAAGGTAACCGTAGGGGAACCTGCGGTTGGATCACCTCCT"
 #seq_file = seq_file[0:500]
 from Bio.Seq import Seq
@@ -125,45 +138,7 @@ def target_extend_outwards2(target, s): # not used ever... get rid of?
     return (targetA + targetB)
 
 
-def exclude_match(targets):
-
-    mindistance = 100
-    target = []
-    for candidate in targets:
-        current_distance = candidate[4]-candidate[2]
-        if current_distance < mindistance:
-            mindistance = current_distance
-
-            target = [candidate]
-    return target
-    
-
-
-def piece_match2(pieces):
-    targets =[]
-    print pieces
-    if pieces:
-        lefthalf = pieces[0]
-        righthalf = pieces [1]
-
-    
-        for left in lefthalf:
-            for right in righthalf:
-                if len(left[0]) ==len(right[0]):
-
-                        if rna_hamming(left[0], right[0]) == 0:
-                            target = left + right
-                            print target
-                            print "extend out"
-                            target = target_extend_outwards(target, s)  #FIX HERE#it's not extending far enough?
-                            #pair matching is off.  Need to redo architecture to add on one base at a time,...
-                            
-                            print target
-                            targets.append(target)
-        target = exclude_match(targets)
-                        
-
-    return target
+   
 
 
 
@@ -234,7 +209,8 @@ def seed_make(pieces, s): # working completely
                             
                             #print "after outwards " + str(target)
                             if not target in targets:
-                           
+                                target.append(target[0])
+                                target.append(target[3])
                                 targets.append(target)
 #                          
 
@@ -406,12 +382,14 @@ def closerange_target_extend(target,s, order):  #index tracking is off on both s
                 if count>4: 
                     #print "found one in set that needs 4"
                     #print "about to be returned : {0}".format(newtarget)
-                    dashedA =   newtarget[0][0:count]+extendAseed*'-'+ target[0]
-                    dashedB =   target[3]+extendBseed*'-'+ newtarget[3][-count:]
-                    print dashedA
-                    print dashedB
-                    print newtarget
-                    print '\n'
+                    dashedA =   str(newtarget[0][0:count-1])+(extendAseed)*'-'+ str(target[6])
+                    dashedB =   str(target[7])+extendBseed*'-'+ str(newtarget[3][-(count-1):])
+                    newtarget.append(dashedA)
+                    newtarget.append(dashedB)
+                    #print dashedA
+                    #print dashedB
+                    #print newtarget
+                    #print '\n'
                     return newtarget
                 else:
                     testcycles = testcycles + 1
@@ -419,6 +397,14 @@ def closerange_target_extend(target,s, order):  #index tracking is off on both s
                 if count>5: 
                     #print "found one in set that needs 5"
                     #print "about to be returned : {0}".format(newtarget)
+                    dashedA =   str(newtarget[0][0:count-1])+(extendAseed)*'-'+ str(target[6])
+                    dashedB =   str(target[7])+extendBseed*'-'+ str(newtarget[3][-(count-1):])
+                    newtarget.append(dashedA)
+                    newtarget.append(dashedB)
+                    #print dashedA
+                    #print dashedB
+                    #print newtarget
+                    #print '\n'
                     return newtarget
                 else:
                     testcycles = testcycles + 1
@@ -431,6 +417,14 @@ def closerange_target_extend(target,s, order):  #index tracking is off on both s
                 #print extension_order[testcycles]
                 #print "targetA, target B, extensionA, extentionB: {0}, {1}, {2}, {3}, {4}".format(tmptargetA, tmptargetB, extensionA, extensionB, testcycles)
                 #print "about to be returned : {0}, not in setthatneeds4".format(newtarget)
+                dashedA =   str(newtarget[0][0:count-1])+(extendAseed)*'-'+ str(target[6])
+                dashedB =   str(target[7])+extendBseed*'-'+ str(newtarget[3][-(count-1):])
+                newtarget.append(dashedA)
+                newtarget.append(dashedB)
+                #print dashedA
+                #print dashedB
+                #print newtarget
+                #print '\n'
                 return newtarget
 
     
@@ -476,7 +470,7 @@ def end_arm_extension(target, s):
     
      
         count = 0
-        print "enterhamming loop"
+        #print "enterhamming loop"
         #print extension_order[testcycles]
         while hamm == 0 and extensionA:
                 #current_gap = gap + max(extension_order[testcycles][0], extension_order[testcycles][1])
@@ -507,6 +501,14 @@ def end_arm_extension(target, s):
         if count>1: 
             #print "found one in set that needs 4"
             #print "about to be returned : {0}".format(newtarget)
+            dashedA =   str(newtarget[0][0:count-1])+(extendAseed)*'-'+ str(target[6])
+            dashedB =   str(target[7])+extendBseed*'-'+ str(newtarget[3][-(count-1):])
+            newtarget.append(dashedA)
+            newtarget.append(dashedB)
+            #print dashedA
+            #print dashedB
+            #print newtarget
+            #print '\n'
             return newtarget
         else:
             testcycles = testcycles + 1
@@ -533,7 +535,7 @@ def small_hairpin_extension(target, s):
     count = 1
     testcycles = 0
     
-    extension_order = ['01','10','11', '02', '20', '12', '21']
+    extension_order = [ '00', '20', '02','01', '11', '11','12', '21']  #rearranged. May have to just break it up and run several times
 
     while testcycles <len(extension_order):
         #print "testcycles: {0}".format(testcycles)
@@ -576,9 +578,18 @@ def small_hairpin_extension(target, s):
                 
                     
        
-        if count>1: 
+        if count>1: #wrong here?
             #print "found one in set that needs 4"
             #print "about to be returned : {0}".format(newtarget)
+            dashedA =   str(newtarget[0][0:count-1])+(extendAseed)*'-'+ str(target[6])
+            dashedB =   str(target[7])+extendBseed*'-'+ str(newtarget[3][-(count-1):])
+            newtarget.append(dashedA)
+            newtarget.append(dashedB)
+##            print dashedA
+##            print dashedB
+##            print newtarget
+##            print '\n'
+            
             return newtarget
         else:
             testcycles = testcycles + 1
@@ -598,9 +609,67 @@ def remove_duplicates(targets):
 
 #s1 = "AAATAAAGAAA"
 #s2 = "TTTTTTTATTT"
-s=seq_file
-print len(s)
+
+#print len(s)
 folds = defaultdict(list)
+
+def trim_arms(arms):
+    trimmedarms=[]
+    print len(arms)
+    for arm in arms:
+        
+        armlength = arm[2]-arm[1]
+        dashcount = arm[6].count("-")
+        if (1.00*dashcount/armlength)<.45:  #arms can't be more than 40% unbonded bases
+    ##        print "arm6dashes {0}".format(arm[6].count("-"))
+    ##        print "dashcount/armlength+ {0}".format(1.00*dashcount/armlength)
+    ##        print arm
+            armlength = arm[5]-arm[4]
+            dashcount = arm[7].count("-")
+            if (1.00*dashcount/armlength)<.45:  #arms can't be more than 45% unbonded bases#SO FAR most found is 40%
+
+
+                trimmedarms.append(arm)
+    print len(trimmedarms)
+    
+    prevstate=""
+    unpaired_count = 0
+    more_trimmedarms=[]
+
+    for arm in trimmedarms:
+        prevstate=""
+        unpaired_count = 0
+        for char in arm[6]:
+            state = char
+            
+            if char == "-" and prevstate != "-":
+                unpaired_count = unpaired_count + 1
+            prevstate = state
+##        print arm
+##        print unpaired_count
+##        print '\n'
+        if len(arm[0])<40 and unpaired_count<4:
+            prevstate=""
+            unpaired_count = 0
+            for char in arm[7]:
+                state = char
+                
+                if char == "-" and prevstate != "-":
+                    unpaired_count = unpaired_count + 1
+                prevstate = state
+##            print arm
+##            print unpaired_count
+##            print '\n'
+            if len(arm[3])<40 and unpaired_count<4:
+                more_trimmedarms.append(arm)
+
+    
+    print len(more_trimmedarms)
+
+    return more_trimmedarms
+ 
+
+
 
 def controlpanel(s):
 #print rna_hamming(s1,s2)
@@ -625,17 +694,22 @@ def controlpanel(s):
 
         
     for seed in seeds:  
-        arms.append(seed)
+        targets.append(seed)
         if len(seed[0])==2:
             #print "seed {0}".format(seed)
             extra = small_hairpin_extension(seed, s)
+            #print "extra : " +str(extra)
             #print "extra {0}".format(extra)
             #print "\n"
             if extra == seed:
                continue #if there's no close extension on top of 2 bp, the go to next seed
-            if not (len(extra[0])==4 and len(extra[3])==4):
-                if len(extra[0]) < 6:#to make sure arm extend enough in most cases
-                    continue
+            ##if not (len(extra[0])==4 and len(extra[3])==4): #forgot what this is for...
+            if len(extra[0]) < 6:#to make sure arm extend enough in most cases
+                continue
+            else:
+                seed = extra
+                targets.append(extra)
+                #print "extended seed: {0}".format(seed)
         close_target = closerange_target_extend(seed, s, "short")
         extra = end_arm_extension(close_target, s)
         if not extra in targets:
@@ -654,6 +728,8 @@ def controlpanel(s):
             
         close_target = closerange_target_extend(seed, s, "long")
         extra = end_arm_extension(close_target, s)
+        if not extra in targets:
+            targets.append(extra)
         count = 0
         #print "round long"  #made for finding 502ish-546 arm
         while count < 4:
@@ -667,12 +743,15 @@ def controlpanel(s):
             count = count + 1
         close_target = closerange_target_extend(seed, s, "jump")
         extra = end_arm_extension(close_target, s)
+        if not extra in targets:
+            targets.append(extra)
         count = 0
         #print "round jump"  #made for finding 502ish-546 arm
         while count < 4:
 
             close_target = closerange_target_extend(close_target, s, "jump")
             if not close_target in targets:
+                
                 targets.append(close_target)
                 extra = end_arm_extension(close_target, s)
                 if not extra in targets:
@@ -686,12 +765,18 @@ def controlpanel(s):
             arms.append(target)
         targets = []
     arms = remove_duplicates(arms)
+    arms = trim_arms(arms)
     
-            
-
-    for arm in arms:
-       print arm
+  
+    
+    return arms
+    #print '\n'
+    #print "all possible arms listed: "
+    #for arm in arms:
+    #   print str(count) + ". " + str(arm)
+    #   count = count +1
     #print '\n\n'
+    #print len(arms)
     
     #print seeds
     #missing the left arm
@@ -706,14 +791,50 @@ def controlpanel(s):
 
 #s1 = "AAATAAAGAAA"
 #s2 = "TTTTTTTATTT"
-s=seq_file
+
+s_file = "ecoli_16s.txt"
+seq=open(s_file, 'r')
+s = seq.read().strip()
+seq.close()
+
 #s=s[403:554]
-s = s[142:220]
-print s
+#print "full sequence: " + str(s) + "\n"
+##s = s[130:200]
+#print "Partial sequence s[142:220]: {0}".format(s)
+#print "\n"
 #s=s[495:550]
+
 #print s[25:37]
-print len(s)
-controlpanel(s)
+#print len(s)
+arms = controlpanel(s)
+
+a = "true_arms.txt"
+
+true_arms = [line.strip() for line in open(a, 'r')]
+truearms = []
+for arm in true_arms:
+    newarm = eval(arm)
+    truearms.append(newarm)  
+
+for arm in arms:
+    if arm in truearms:
+        print arm
+
+    
+        
+
+
+
+f = open("arms.txt", "w")
+
+for arm in arms:
+  f.write("%s\n" % arm)
+
+f.close()
+
+
+
+print "done"
 #print "s[1490: 1540]" + str(s[1490:1540])
 #print "s[79:90]" + str(s[79:90])
 #print "s[149:160]" + str(s[149:160])

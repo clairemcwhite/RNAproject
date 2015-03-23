@@ -234,7 +234,8 @@ def seed_make(pieces, s): # working completely
                             
                             #print "after outwards " + str(target)
                             if not target in targets:
-                           
+                                target.append(target[0])
+                                target.append(target[3])
                                 targets.append(target)
 #                          
 
@@ -406,12 +407,14 @@ def closerange_target_extend(target,s, order):  #index tracking is off on both s
                 if count>4: 
                     #print "found one in set that needs 4"
                     #print "about to be returned : {0}".format(newtarget)
-                    dashedA =   newtarget[0][0:count]+extendAseed*'-'+ target[0]
-                    dashedB =   target[3]+extendBseed*'-'+ newtarget[3][-count:]
-                    print dashedA
-                    print dashedB
-                    print newtarget
-                    print '\n'
+                    dashedA =   str(newtarget[0][0:count-1])+(extendAseed)*'-'+ str(target[6])
+                    dashedB =   str(target[7])+extendBseed*'-'+ str(newtarget[3][-(count-1):])
+                    newtarget.append(dashedA)
+                    newtarget.append(dashedB)
+                    #print dashedA
+                    #print dashedB
+                    #print newtarget
+                    #print '\n'
                     return newtarget
                 else:
                     testcycles = testcycles + 1
@@ -419,6 +422,14 @@ def closerange_target_extend(target,s, order):  #index tracking is off on both s
                 if count>5: 
                     #print "found one in set that needs 5"
                     #print "about to be returned : {0}".format(newtarget)
+                    dashedA =   str(newtarget[0][0:count-1])+(extendAseed)*'-'+ str(target[6])
+                    dashedB =   str(target[7])+extendBseed*'-'+ str(newtarget[3][-(count-1):])
+                    newtarget.append(dashedA)
+                    newtarget.append(dashedB)
+                    #print dashedA
+                    #print dashedB
+                    #print newtarget
+                    #print '\n'
                     return newtarget
                 else:
                     testcycles = testcycles + 1
@@ -431,6 +442,14 @@ def closerange_target_extend(target,s, order):  #index tracking is off on both s
                 #print extension_order[testcycles]
                 #print "targetA, target B, extensionA, extentionB: {0}, {1}, {2}, {3}, {4}".format(tmptargetA, tmptargetB, extensionA, extensionB, testcycles)
                 #print "about to be returned : {0}, not in setthatneeds4".format(newtarget)
+                dashedA =   str(newtarget[0][0:count-1])+(extendAseed)*'-'+ str(target[6])
+                dashedB =   str(target[7])+extendBseed*'-'+ str(newtarget[3][-(count-1):])
+                newtarget.append(dashedA)
+                newtarget.append(dashedB)
+                #print dashedA
+                #print dashedB
+                #print newtarget
+                #print '\n'
                 return newtarget
 
     
@@ -476,7 +495,7 @@ def end_arm_extension(target, s):
     
      
         count = 0
-        print "enterhamming loop"
+        #print "enterhamming loop"
         #print extension_order[testcycles]
         while hamm == 0 and extensionA:
                 #current_gap = gap + max(extension_order[testcycles][0], extension_order[testcycles][1])
@@ -507,6 +526,14 @@ def end_arm_extension(target, s):
         if count>1: 
             #print "found one in set that needs 4"
             #print "about to be returned : {0}".format(newtarget)
+            dashedA =   str(newtarget[0][0:count-1])+(extendAseed)*'-'+ str(target[6])
+            dashedB =   str(target[7])+extendBseed*'-'+ str(newtarget[3][-(count-1):])
+            newtarget.append(dashedA)
+            newtarget.append(dashedB)
+            #print dashedA
+            #print dashedB
+            #print newtarget
+            #print '\n'
             return newtarget
         else:
             testcycles = testcycles + 1
@@ -533,7 +560,7 @@ def small_hairpin_extension(target, s):
     count = 1
     testcycles = 0
     
-    extension_order = ['01','10','11', '02', '20', '12', '21']
+    extension_order = [ '00', '20', '02','01', '11', '11','12', '21']  #rearranged. May have to just break it up and run several times
 
     while testcycles <len(extension_order):
         #print "testcycles: {0}".format(testcycles)
@@ -576,9 +603,18 @@ def small_hairpin_extension(target, s):
                 
                     
        
-        if count>1: 
+        if count>1: #wrong here?
             #print "found one in set that needs 4"
             #print "about to be returned : {0}".format(newtarget)
+            dashedA =   str(newtarget[0][0:count-1])+(extendAseed)*'-'+ str(target[6])
+            dashedB =   str(target[7])+extendBseed*'-'+ str(newtarget[3][-(count-1):])
+            newtarget.append(dashedA)
+            newtarget.append(dashedB)
+##            print dashedA
+##            print dashedB
+##            print newtarget
+##            print '\n'
+            
             return newtarget
         else:
             testcycles = testcycles + 1
@@ -599,7 +635,7 @@ def remove_duplicates(targets):
 #s1 = "AAATAAAGAAA"
 #s2 = "TTTTTTTATTT"
 s=seq_file
-print len(s)
+#print len(s)
 folds = defaultdict(list)
 
 def controlpanel(s):
@@ -625,17 +661,22 @@ def controlpanel(s):
 
         
     for seed in seeds:  
-        arms.append(seed)
+        targets.append(seed)
         if len(seed[0])==2:
             #print "seed {0}".format(seed)
             extra = small_hairpin_extension(seed, s)
+            #print "extra : " +str(extra)
             #print "extra {0}".format(extra)
             #print "\n"
             if extra == seed:
                continue #if there's no close extension on top of 2 bp, the go to next seed
-            if not (len(extra[0])==4 and len(extra[3])==4):
-                if len(extra[0]) < 6:#to make sure arm extend enough in most cases
-                    continue
+            ##if not (len(extra[0])==4 and len(extra[3])==4): #forgot what this is for...
+            if len(extra[0]) < 6:#to make sure arm extend enough in most cases
+                continue
+            else:
+                seed = extra
+                targets.append(extra)
+                #print "extended seed: {0}".format(seed)
         close_target = closerange_target_extend(seed, s, "short")
         extra = end_arm_extension(close_target, s)
         if not extra in targets:
@@ -673,6 +714,7 @@ def controlpanel(s):
 
             close_target = closerange_target_extend(close_target, s, "jump")
             if not close_target in targets:
+                
                 targets.append(close_target)
                 extra = end_arm_extension(close_target, s)
                 if not extra in targets:
@@ -687,11 +729,18 @@ def controlpanel(s):
         targets = []
     arms = remove_duplicates(arms)
     
-            
-
-    for arm in arms:
-       print arm
+    count = 1
+    #print "all possible arms: "
+    print count
+    print len(arms)
+    #print arms
+    #print '\n'
+    #print "all possible arms listed: "
+    #for arm in arms:
+    #   print str(count) + ". " + str(arm)
+    #   count = count +1
     #print '\n\n'
+    #print len(arms)
     
     #print seeds
     #missing the left arm
@@ -708,11 +757,14 @@ def controlpanel(s):
 #s2 = "TTTTTTTATTT"
 s=seq_file
 #s=s[403:554]
-s = s[142:220]
-print s
+#print "full sequence: " + str(s) + "\n"
+#s = s[142:220]
+#print "Partial sequence s[142:220]: {0}".format(s)
+#print "\n"
 #s=s[495:550]
+
 #print s[25:37]
-print len(s)
+#print len(s)
 controlpanel(s)
 #print "s[1490: 1540]" + str(s[1490:1540])
 #print "s[79:90]" + str(s[79:90])
