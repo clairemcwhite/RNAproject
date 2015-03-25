@@ -306,7 +306,7 @@ def target_extend_inwards(target, s):
 
 
 
-def target_extend(target,s, order):  #index tracking is off on both sides, but offsets are working.  
+def target_extend(target,s, order, prev):  #index tracking is off on both sides, but offsets are working.  
     #print "enter closerange"
     #print "target: {0}".format(target)
     #maybe a combination of pieces_inhelix and target_extend?
@@ -326,13 +326,22 @@ def target_extend(target,s, order):  #index tracking is off on both sides, but o
     hamm = 0
 
     count = 1
-    testcycles = 0
-    #extension_order = [[0, 1], [1, 0], [1, 1],  [1, 2], [2, 1], [0,2], [2, 0],[2, 2]]  #02, 20 come after 12, 21
+    #testcycles = 0
+    #extension_order = [[0, 1], [1, 0], [1, 1],  [1, 2], [2, 1], [0,2], [2, 0],[2, 2]]  
 
     if order == "short":
-        extension_order = ['00', '10', '01', '11', '21', '12', '02', '20', '22']#, '03', '30', '31', '13', '23', '32', '33', '42', '24','04', '40', '42', '24', '43', '34', '44', '52', '25', '53', '35', '05', '50', '06', '60', '54', '45', '55', '63', '36', '64', '46', '65', '56', '66', '74', '47', '75', '57', '76', '67', '77', '87', '78', '88', '89', '98', '99']
-      
+        extension_order = ['00', '10', '01', '11', '02', '20', '21', '12', '22', '03', '30', '31', '13', '23', '32', '33', '42', '24','04', '40', '42', '24', '43', '34', '44', '52', '25', '53', '35', '05', '50', '06', '60', '54', '45', '55', '63', '36', '64', '46', '65', '56', '66', '74', '47', '75', '57', '76', '67', '77', '87', '78', '88', '89', '98', '99']
+        bridge = 2
+    if order == "end_extension":
+        extension_order =['11']
+        bridge = 1
 
+    if order == "small_hairpin":
+        extension_order = [ '00', '20', '02','01', '11', '11','12', '21'] 
+        bridge = 1
+        
+
+    tescycles = prev
         
     while testcycles <len(extension_order):
         #print "testcycles: {0}".format(testcycles)
@@ -374,44 +383,7 @@ def target_extend(target,s, order):  #index tracking is off on both sides, but o
                 #print testcycles
                 
                     
-        if count<3:  
-
-            testcycles = testcycles + 1
-        elif extension_order[testcycles] in setthatneeds4:
-                if count>4: 
-                    #print "found one in set that needs 4"
-                    #print "about to be returned : {0}".format(newtarget)
-                    dashedA =   str(newtarget[0][0:count-1])+(extendAseed)*'-'+ str(target[6])
-                    dashedB =   str(target[7])+extendBseed*'-'+ str(newtarget[3][-(count-1):])
-                    newtarget.append(dashedA)
-                    newtarget.append(dashedB)
-                    #print dashedA
-                    #print dashedB
-                    #print newtarget
-                    #print '\n'
-                    return newtarget
-                else:
-                    testcycles = testcycles + 1
-        elif extension_order[testcycles] in setthatneeds5:
-                if count>5: 
-                    #print "found one in set that needs 5"
-                    #print "about to be returned : {0}".format(newtarget)
-                    dashedA =   str(newtarget[0][0:count-1])+(extendAseed)*'-'+ str(target[6])
-                    dashedB =   str(target[7])+extendBseed*'-'+ str(newtarget[3][-(count-1):])
-                    newtarget.append(dashedA)
-                    newtarget.append(dashedB)
-                    #print dashedA
-                    #print dashedB
-                    #print newtarget
-                    #print '\n'
-                    return newtarget
-                else:
-                    testcycles = testcycles + 1
-            
-            
-            
-        elif not extension_order[testcycles] in setthatneeds4:
-            if count>2:  
+        if count > bridge:
                 #newtarget = [s[tmptargetA[1]-extendAseed -len(extensionA): leftbound], tmptargetA[1]-extendAseed -len(extensionA), leftbound, s[rightbound: tmptargetB[2]+extendBseed+ len(extensionB)], rightbound,tmptargetB[2]+extendBseed+ len(extensionB) ]  
                 #print extension_order[testcycles]
                 #print "targetA, target B, extensionA, extentionB: {0}, {1}, {2}, {3}, {4}".format(tmptargetA, tmptargetB, extensionA, extensionB, testcycles)
@@ -424,177 +396,183 @@ def target_extend(target,s, order):  #index tracking is off on both sides, but o
                 #print dashedB
                 #print newtarget
                 #print '\n'
-                return newtarget
+                return newtargetcount<3
+        else:
+            
+
+            testcycles = testcycles + 1
+
+     
 
     
-    return target            
+    return (target, testcycles-1)            
               
             
         
     #return (tmptargetA + tmptargetB)
 
-def end_arm_extension(target, s):
-        #print "enter closerange"
-    #print "target: {0}".format(target)
-
-          
-    
-    if target[1] <= 1:  
-        return target
-    if target[5] >=len(s)-2:
-        return target
-    #gap = target[6]
-    
-    tmptargetA = target[0:3]
-    tmptargetB = target[3:6]
-    leftbound = tmptargetA[2]
-    rightbound = tmptargetB[1]
-    hamm = 0
-
-    count = 1
-    testcycles = 0
-    
-    extension_order = ['11']
-
-    while testcycles <1:
-        #print "testcycles: {0}".format(testcycles)
-        
-        
-        hamm = 0
-        extensionA= "placeholder"
-        extensionB= "placeholder"
-        extend = 1
-        extendAseed = int(extension_order[testcycles][:1])
-        extendBseed = int(extension_order[testcycles][-1])
-    
-     
-        count = 0
-        #print "enterhamming loop"
-        #print extension_order[testcycles]
-        while hamm == 0 and extensionA:
-                #current_gap = gap + max(extension_order[testcycles][0], extension_order[testcycles][1])
-                
-                newtarget = [s[tmptargetA[1]-len(extensionA): leftbound], tmptargetA[1]-len(extensionA), leftbound, s[rightbound: tmptargetB[2]+ len(extensionB)], rightbound,tmptargetB[2]+len(extensionB)]
-                
-                #print "running..." + str(count)
-                extensionA =  s[tmptargetA[1]-extendAseed-extend:tmptargetA[1]]
-                extensionB = s[tmptargetB[2]:tmptargetB[2]+extendBseed+extend]
-                 
-          
-                hamm = hamm + rna_hamming(extensionA[0:1], extensionB[-1])
-                #print "this went to hamm, extensionAbegin : {0}, extensionBend: {1}".format(extensionA[0:1], extensionB[-1])
-
-                
-                
-                #print "targetA, target B, extensionA, extentionB: {0}, {1}, {2}, {3}".format(tmptargetA, tmptargetB, extensionA, extensionB)  
-
-                extend = extend + 1
-
-
-                count = count + 1
-                #print count
-                #print testcycles
-                
-                    
-       
-        if count>1: 
-            #print "found one in set that needs 4"
-            #print "about to be returned : {0}".format(newtarget)
-            dashedA =   str(newtarget[0][0:count-1])+(extendAseed)*'-'+ str(target[6])
-            dashedB =   str(target[7])+extendBseed*'-'+ str(newtarget[3][-(count-1):])
-            newtarget.append(dashedA)
-            newtarget.append(dashedB)
-            #print dashedA
-            #print dashedB
-            #print newtarget
-            #print '\n'
-            return newtarget
-        else:
-            testcycles = testcycles + 1
-
-    
-    return target            
-
-def small_hairpin_extension(target, s):
-        #print "enter closerange"
-    #print "target: {0}".format(target)
-
-    if target[1] <= 4:  
-        return target
-    if target[5] >=len(s)-2:
-        return target
-    #gap = target[6]
-    
-    tmptargetA = target[0:3]
-    tmptargetB = target[3:6]
-    leftbound = tmptargetA[2]
-    rightbound = tmptargetB[1]
-    hamm = 0
-
-    count = 1
-    testcycles = 0
-    
-    extension_order = [ '00', '20', '02','01', '11', '11','12', '21']  #rearranged. May have to just break it up and run several times
-
-    while testcycles <len(extension_order):
-        #print "testcycles: {0}".format(testcycles)
-        
-        
-        hamm = 0
-        extensionA= "placeholder"
-        extensionB= "placeholder"
-        extend = 1
-        extendAseed = int(extension_order[testcycles][:1])
-        extendBseed = int(extension_order[testcycles][-1])
-    
-     
-        count = 0
-        ##print "enterhamming loop"
-        #print extension_order[testcycles]
-        while hamm == 0 and extensionA:
-                #current_gap = gap + max(extension_order[testcycles][0], extension_order[testcycles][1])
-                
-                newtarget = [s[tmptargetA[1]-len(extensionA): leftbound], tmptargetA[1]-len(extensionA), leftbound, s[rightbound: tmptargetB[2]+ len(extensionB)], rightbound,tmptargetB[2]+len(extensionB)]
-                
-                #print "running..." + str(count)
-                extensionA =  s[tmptargetA[1]-extendAseed-extend:tmptargetA[1]]
-                extensionB = s[tmptargetB[2]:tmptargetB[2]+extendBseed+extend]
-                 
-          
-                hamm = hamm + rna_hamming(extensionA[0:1], extensionB[-1])
-                #print "this went to hamm, extensionAbegin : {0}, extensionBend: {1}".format(extensionA[0:1], extensionB[-1])
-
-                
-                
-                #print "targetA, target B, extensionA, extentionB: {0}, {1}, {2}, {3}".format(tmptargetA, tmptargetB, extensionA, extensionB)  
-
-                extend = extend + 1
-
-
-                count = count + 1
-                #print count
-                #print testcycles
-                
-                    
-       
-        if count>1: #wrong here?
-            #print "found one in set that needs 4"
-            #print "about to be returned : {0}".format(newtarget)
-            dashedA =   str(newtarget[0][0:count-1])+(extendAseed)*'-'+ str(target[6])
-            dashedB =   str(target[7])+extendBseed*'-'+ str(newtarget[3][-(count-1):])
-            newtarget.append(dashedA)
-            newtarget.append(dashedB)
-##            print dashedA
-##            print dashedB
-##            print newtarget
-##            print '\n'
-            
-            return newtarget
-        else:
-            testcycles = testcycles + 1
-
-    
-    return target
+##def end_arm_extension(target, s):
+##        #print "enter closerange"
+##    #print "target: {0}".format(target)
+##
+##          
+##    
+##    if target[1] <= 1:  
+##        return target
+##    if target[5] >=len(s)-2:
+##        return target
+##    #gap = target[6]
+##    
+##    tmptargetA = target[0:3]
+##    tmptargetB = target[3:6]
+##    leftbound = tmptargetA[2]
+##    rightbound = tmptargetB[1]
+##    hamm = 0
+##
+##    count = 1
+##    testcycles = 0
+##    
+##    extension_order = ['11']
+##
+##    while testcycles <1:
+##        #print "testcycles: {0}".format(testcycles)
+##        
+##        
+##        hamm = 0
+##        extensionA= "placeholder"
+##        extensionB= "placeholder"
+##        extend = 1
+##        extendAseed = int(extension_order[testcycles][:1])
+##        extendBseed = int(extension_order[testcycles][-1])
+##    
+##     
+##        count = 0
+##        #print "enterhamming loop"
+##        #print extension_order[testcycles]
+##        while hamm == 0 and extensionA:
+##                #current_gap = gap + max(extension_order[testcycles][0], extension_order[testcycles][1])
+##                
+##                newtarget = [s[tmptargetA[1]-len(extensionA): leftbound], tmptargetA[1]-len(extensionA), leftbound, s[rightbound: tmptargetB[2]+ len(extensionB)], rightbound,tmptargetB[2]+len(extensionB)]
+##                
+##                #print "running..." + str(count)
+##                extensionA =  s[tmptargetA[1]-extendAseed-extend:tmptargetA[1]]
+##                extensionB = s[tmptargetB[2]:tmptargetB[2]+extendBseed+extend]
+##                 
+##          
+##                hamm = hamm + rna_hamming(extensionA[0:1], extensionB[-1])
+##                #print "this went to hamm, extensionAbegin : {0}, extensionBend: {1}".format(extensionA[0:1], extensionB[-1])
+##
+##                
+##                
+##                #print "targetA, target B, extensionA, extentionB: {0}, {1}, {2}, {3}".format(tmptargetA, tmptargetB, extensionA, extensionB)  
+##
+##                extend = extend + 1
+##
+##
+##                count = count + 1
+##                #print count
+##                #print testcycles
+##                
+##                    
+##       
+##        if count>1: 
+##            #print "found one in set that needs 4"
+##            #print "about to be returned : {0}".format(newtarget)
+##            dashedA =   str(newtarget[0][0:count-1])+(extendAseed)*'-'+ str(target[6])
+##            dashedB =   str(target[7])+extendBseed*'-'+ str(newtarget[3][-(count-1):])
+##            newtarget.append(dashedA)
+##            newtarget.append(dashedB)
+##            #print dashedA
+##            #print dashedB
+##            #print newtarget
+##            #print '\n'
+##            return newtarget
+##        else:
+##            testcycles = testcycles + 1
+##
+##    
+##    return target            
+##
+##def small_hairpin_extension(target, s):
+##        #print "enter closerange"
+##    #print "target: {0}".format(target)
+##
+##    if target[1] <= 4:  
+##        return target
+##    if target[5] >=len(s)-2:
+##        return target
+##    #gap = target[6]
+##    
+##    tmptargetA = target[0:3]
+##    tmptargetB = target[3:6]
+##    leftbound = tmptargetA[2]
+##    rightbound = tmptargetB[1]
+##    hamm = 0
+##
+##    count = 1
+##    testcycles = 0
+##    
+##    extension_order = [ '00', '20', '02','01', '11', '11','12', '21']  #rearranged. May have to just break it up and run several times
+##
+##    while testcycles <len(extension_order):
+##        #print "testcycles: {0}".format(testcycles)
+##        
+##        
+##        hamm = 0
+##        extensionA= "placeholder"
+##        extensionB= "placeholder"
+##        extend = 1
+##        extendAseed = int(extension_order[testcycles][:1])
+##        extendBseed = int(extension_order[testcycles][-1])
+##    
+##     
+##        count = 0
+##        ##print "enterhamming loop"
+##        #print extension_order[testcycles]
+##        while hamm == 0 and extensionA:
+##                #current_gap = gap + max(extension_order[testcycles][0], extension_order[testcycles][1])
+##                
+##                newtarget = [s[tmptargetA[1]-len(extensionA): leftbound], tmptargetA[1]-len(extensionA), leftbound, s[rightbound: tmptargetB[2]+ len(extensionB)], rightbound,tmptargetB[2]+len(extensionB)]
+##                
+##                #print "running..." + str(count)
+##                extensionA =  s[tmptargetA[1]-extendAseed-extend:tmptargetA[1]]
+##                extensionB = s[tmptargetB[2]:tmptargetB[2]+extendBseed+extend]
+##                 
+##          
+##                hamm = hamm + rna_hamming(extensionA[0:1], extensionB[-1])
+##                #print "this went to hamm, extensionAbegin : {0}, extensionBend: {1}".format(extensionA[0:1], extensionB[-1])
+##
+##                
+##                
+##                #print "targetA, target B, extensionA, extentionB: {0}, {1}, {2}, {3}".format(tmptargetA, tmptargetB, extensionA, extensionB)  
+##
+##                extend = extend + 1
+##
+##
+##                count = count + 1
+##                #print count
+##                #print testcycles
+##                
+##                    
+##       
+##        if count>1: #wrong here?
+##            #print "found one in set that needs 4"
+##            #print "about to be returned : {0}".format(newtarget)
+##            dashedA =   str(newtarget[0][0:count-1])+(extendAseed)*'-'+ str(target[6])
+##            dashedB =   str(target[7])+extendBseed*'-'+ str(newtarget[3][-(count-1):])
+##            newtarget.append(dashedA)
+##            newtarget.append(dashedB)
+####            print dashedA
+####            print dashedB
+####            print newtarget
+####            print '\n'
+##            
+##            return newtarget
+##        else:
+##            testcycles = testcycles + 1
+##
+##    
+##    return target
 
 
 def remove_duplicates(targets):
@@ -699,7 +677,13 @@ def controlpanel(s):
         ##############
         if len(seed[0])==2:  # short hairpin bounders must extend, or else they get thrown out
             #print "seed {0}".format(seed)
-            extra = small_hairpin_extension(seed, s)
+            prev = 0
+            attempts = [1, 2]
+
+            for attempt in attempts:
+                     tmpseedtargets = tmpseedtargets + [target_extend(seedtarget, s, "small_hairpin", prev)[0]]
+                     prev = target_extend(seedtarget, s, "small_hairpin", prev)[1]
+            
             #print "extra : " +str(extra)
             #print "extra {0}".format(extra)
             #print "\n"
@@ -724,13 +708,18 @@ def controlpanel(s):
             for seedtarget in seedtargets:
 ##                 print seedtarget
 ##                 print seedtargets
-                 tmpseedtargets = tmpseedtargets + [target_extend(seedtarget, s, "short")]
-                 #print "got  here"
-                 tmpseedtargets = tmpseedtargets + [target_extend(seedtarget, s, "long")]
-                 tmpseedtargets = tmpseedtargets + [target_extend(seedtarget, s, "jump")]
-                 tmpseedtargets = tmpseedtargets + [end_arm_extension(seedtarget, s)]
+                 prev = 0
+                 attempts = [1, 2, 3, 4]
 
-       
+                 for attempt in attempts:
+                     print "got here"
+                     tmpseedtargets = tmpseedtargets + [target_extend(seedtarget, s, "short", prev)[0]]
+                     print tmpseedtargets
+                     prev = target_extend(seedtarget, s, "short", prev)[1]
+                     
+                     tmpseedtargets = tmpseedtargets + [target_extend(seedtarget, s, "end_extension", 0)[0]]
+                     tmpseedtargets = remove_duplicates(tmpseedtargets)
+
                       
             seedtargets = seedtargets + tmpseedtargets
  

@@ -726,8 +726,7 @@ def controlpanel(s):
 ##                 print seedtargets
                  tmpseedtargets = tmpseedtargets + [target_extend(seedtarget, s, "short")]
                  #print "got  here"
-                 tmpseedtargets = tmpseedtargets + [target_extend(seedtarget, s, "long")]
-                 tmpseedtargets = tmpseedtargets + [target_extend(seedtarget, s, "jump")]
+
                  tmpseedtargets = tmpseedtargets + [end_arm_extension(seedtarget, s)]
 
        
